@@ -6,9 +6,20 @@
     </title>
 </head>
 <body>
-    <h1>Hola {{ contexto.nombre }}</h1>
-    {% for p in productos %}
-        <p>producto: {{ p.nombre}} - Valor: {{ p.valor}}</p>
-    {% end for %}
+    <h1>{{ Titulo.nombre }}</h1>
+
+    {% for p in Dispositivos %}
+        <p>
+            Dispositivo: {{ p.nombre }} - Consumo: {{ p.consumo }} 
+            
+            {% if p.consumo > max_consumo %}
+                <strong style="color: red;">⚠ Excede el consumo permitido</strong>
+            {% elif p.consumo == max_consumo %}
+                <strong style="color: orange;">⚠ En el límite</strong>
+            {% else %}
+                <span style="color: green;">✔ Consumo normal</span>
+            {% endif %}
+        </p>
+    {% endfor %}
 </body>
 </html>
