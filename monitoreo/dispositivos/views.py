@@ -1,18 +1,25 @@
-from django.shortcuts import render
-# Create your views here.
+from django.shortcuts import render, redirect
+from .models import Dispositivo
+from .forms import DispositivoForm
+
 def inicio(request):
-    Titulo = {"nombre": "Eco energy consumo Status"}
-    Dispositivos = [
-        {"nombre": "sensor 1", "consumo": 60},
-        {"nombre": "maquina 2", "consumo": 200},
-        {"nombre": "maquina prueba4", "consumo": 100}
-    ]
+    # dispositivos = Dispositivo.objects.all()
+    dispositivos = Dispositivo.objects.select_related("categoria") #join
 
-    max_consumo = 100
+    return render(request, "dispositivos/inicio.html", {"dispositivos": dispositivos})
 
+def dispositivo(request):
+    dispositivos = Dispositivo.objects.select_related("categoria") #join
 
-    return render(request, "dispositivos/inicio.html",{
-        "Titulo": Titulo,
-        "Dispositivos": Dispositivos,
-        "max_consumo" : max_consumo
-        })
+    return render(request, "dispositivos/inicio.html", {"dispositivos": dispositivos})
+
+def crear_dispositivo(request):
+    if request.method == 'POST':
+        form = DispositivoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('listar_dispositivos')
+    else:
+        form = DispositivoForm()
+
+    return render(request, 'dispositivos/crear.html', {'form': form})
